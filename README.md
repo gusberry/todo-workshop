@@ -1,28 +1,67 @@
 # NODE - from 0 to TODO app
 
-### In this tutorial we will learn how to:
+## In this step we will learn
 
-- setup your first server using `express`
-- create and modify routes in your `REST API`
-- connect to `DB`
-- add `authorization` to your application
-- migrate your app to `GraphQL`
+- what is **express**
+- how to use **express-generator**
+- basic principles of **express applications**
 
-We will go through our goals step by step. In that way we'll try to show you how it is easy to work with node. The steps will be described in their own brunch.
+## Express
 
-Before we start make sure that you have `node` installed by running this command in your terminal:
+The easiest way to explain what is **express** is to get definition from [official site]
+
+> Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+
+This frameworks helps to hide all low level nodejs apis and gives developer a more userfriendly interfaces to work with requests.
+
+In order to start developing our application we need to install **express-generator** that will do most of the handwork. This command will add `express` command to your **PATH** so it will be available in the terminal.
 
 ```sh
-node -v
+npm install -g express-generator
 ```
 
-If you don't have it yet go to [Node official site] for further instruction on how to get node on your machine.
+After that we can generate our app. To make our app simplier we won't use any template engines (`--no-view` flag).
 
-After you'll get `node` switch to the next step by using command:
+```sh
+express --no-view
+```
+
+You should now have some new files in your project (the structure is not strict and can be changed to fit your application purposes).
+
+```sh
+├── bin
+│   └── www
+├── routes
+│   ├── users.js
+│   └── index.js
+├── public
+│   └── ...
+├── README.md
+├── package.json
+└── app.js
+```
+
+- `package.json` - is the place to list your app dependencies, commands, configs for your packages etc.
+- `app.js` - is used for configuring your server, this is the place where the initial routing is made and a common request handlers are connected to your application.
+- `public` - folder is used to serve files to the client
+- `routes` - contains handlers for specific routes
+- `bin\www` - this is the entry point for your application. Basic error handling and server launch are made here.
+
+Ok lets start our server! Run:
+
+```sh
+npm install && npm start
+```
+
+And open browser <http://localhost:3000>
+
+Congratulations! You are running your very first NodeJS server.
+
+If you ready to go to the next step run:
 
 ```sh
 git clean -fd
-git checkout step-1-express-server
+git checkout step-2-API
 ```
 
-[Node official site]: <https://nodejs.org/en/>
+[official site]: <http://expressjs.com>
