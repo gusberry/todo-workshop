@@ -1,6 +1,6 @@
 # NODE - from 0 to TODO app
 
-In this tutorial we will learn how to:
+### In this tutorial we will learn how to:
 
 - setup your first server using `express`
 - create and modify routes in your `REST API`
@@ -8,23 +8,21 @@ In this tutorial we will learn how to:
 - add `authorization` to your application
 - migrate your app to `GraphQL`
 
-The tutorial will consist from several steps 
+We will go through our goals step by step. In that way we'll try to show you how it is easy to work with node. The steps will be described in their own brunch.
+
+Before we start make sure that you have `node` installed by running this command in your terminal:
 
 ```sh
-npm i -g express-generator
+node -v
 ```
+
+If you don't have it yet go to [Node official site] for further instruction on how to get node on your machine.
+
+After you'll get `node` switch to the next step by using command:
 
 ```sh
-express --no-view --git
+git clean -fd
+git checkout step-1-express-server
 ```
 
-```sh
-npm i
-npm start
-```
-
-Verify that server is up and running in your preferred browser.
-
-```sh
-localhost:8000
-```
+[Node official site]: <https://nodejs.org/en/>
