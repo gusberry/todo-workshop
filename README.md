@@ -43,6 +43,7 @@ Let's take a look at our new files
 └── app.js
 
 ```
+
 - `config/config.json` is holding your configurations to connect to DB for different envs
 - `models/index.js` is needed to initialize models that will be defined within `models/` folder. It is also exports *db* object to be accessed from other places
 - `migrations` will contain migration instructions for transferring our DB from one state to another
@@ -125,7 +126,7 @@ List.associate = function(models) {
 //...
 ```
 
-The ORM will do the dirty work for you + will create a methods in those models in order to manipulate related models like `User.findById(1).then(user => user.getLists())` will return all list that have UserId equal 1. Easy as that! for more information you can see [this part of docs]. Go ahead and make association of **List** and **Todo**. Don't forget to restart the server. In order to get our changes to the tables we need to say to **sequelize** to drop tables before initialization:
+The ORM will do the dirty work for you + will create a methods in those models in order to manipulate related models like `User.findById(1).then(user => user.getLists())` will return all list that have UserId equal 1. Easy as that! for more information you can see [this part of docs]. Go ahead and make association of **List** and **Todo**. Don't forget to restart the server. In order to get our changes to tables we need to say to **sequelize** to drop tables before initialization:
 
 ```js
 // bin/www
