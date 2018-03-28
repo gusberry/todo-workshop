@@ -1,24 +1,43 @@
-var express = require('express');
-var router = express.Router({ mergeParams: true });
+const express = require("express");
 
-router.get('/', function(req, res) {
-  res.send('All todos' + JSON.stringify(req.params));
+const todoController = require("../controllers/todo");
+const listController = require("../controllers/list");
+
+const router = express.Router();
+
+router.get("/", function(req, res) {
+  listController.getListsTodos(req.context.list).then(todos => res.send(todos));
 });
 
-router.post('/', function(req, res) {
-  res.send(`Created todo with data: $${JSON.stringify(req.body)}`);
+router.post("/", function(req, res) {
+  todoController
+    .createTodoAndAddToList(req.context.list, req.body)
+    .then(todo => res.json(todo));
 });
 
-router.get('/:todoId', function(req, res) {
-  res.send(`todo id: ${req.params.todoId}`);
+router.param("todoId", function(req, res, next, todoId) {
+  todoController.getTodoById({ id: todoId }).then(todo => {
+    req.context = req.context || {};
+    req.context.todo = todo;
+
+    next();
+
+    return todo;
+  });
 });
 
-router.put('/:todoId', function(req, res) {
-  res.send(`Updated todo id: ${req.params.todoId} with data: ${JSON.stringify(req.body)}`);
+router.get("/:todoId", function(req, res) {
+  res.json(req.context.todo);
 });
 
-router.delete('/:todoId', function(req, res) {
-  res.send(`Removed todo id: ${req.params.todoId}`);
+router.put("/:todoId", function(req, res) {
+  todoController
+    .updateTodo(req.context.todo, req.body)
+    .then(todo => res.json(todo));
+});
+
+router.delete("/:todoId", function(req, res) {
+  todoController.deleteTodo(req.context.todo).then(todo => res.json(todo));
 });
 
 module.exports = router;
