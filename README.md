@@ -34,7 +34,7 @@ const listInterface = require("./list");
 
 module.exports = {
   get: ({ id }) => db.Todo.findById(id),
-
+  
   create: ({ text }) => db.Todo.create({ text }),
 
   delete: todo => todo.destroy(),
@@ -49,7 +49,7 @@ module.exports = {
 
 Probably you've noticed `.getTodos()` and `.setList()` methods. Those methods are added by sequelize with defining associations on model initialization.
 
-Now when we've hidden our DB related implementation in interface logic we can continue with routers controllers. They will be used to perform a proper handling of request data.
+Now since we've hidden our DB related implementation in interface logic we can continue with routers controllers. They will be used to perform a proper handling of request data.
 
 ```js
 // controllers/list.js
@@ -217,5 +217,5 @@ If you ready to go to the next step run:
 
 ```sh
 git clean -fd
-git checkout step-3-DB
+git checkout step-5-auth
 ```
