@@ -28,15 +28,27 @@ Great not we need to create **user interface** in order to hide our sequelize AP
 const db = require("../models");
 
 module.exports = {
+<<<<<<< HEAD
   get: ({ email }) => db.User.findOne({ where: { email } }),
 
   create: ({ email, password }) => db.User.create({ email, password }),
+=======
+  get: ({ id }) => db.Todo.findById(id),
+  
+  create: ({ text }) => db.Todo.create({ text }),
+>>>>>>> step-4-connect-DB-to-API
 
   delete: user => user.destroy()
 };
 ```
 
+<<<<<<< HEAD
 Perfect one more thing is need for **User model** we need a controller for it.
+=======
+Probably you've noticed `.getTodos()` and `.setList()` methods. Those methods are added by sequelize with defining associations on model initialization.
+
+Now since we've hidden our DB related implementation in interface logic we can continue with routers controllers. They will be used to perform a proper handling of request data.
+>>>>>>> step-4-connect-DB-to-API
 
 ```js
 //controllers/user.js
@@ -273,7 +285,12 @@ As usual. If you're ready just switch to another branch.
 
 ```sh
 git clean -fd
+<<<<<<< HEAD
 git checkout step-6
 ```
 
 [passport.js]: http://www.passportjs.org
+=======
+git checkout step-5-auth
+```
+>>>>>>> step-4-connect-DB-to-API
