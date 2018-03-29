@@ -137,6 +137,182 @@ db.sequelize
 
 Congratulations! You have set up the basic DB for your application!
 
+But stop. We forgot that users will need to login to our application. Imagine that password field had to be added after we have populated our DB with data. In order to not brake everything a migration had to be created.
+
+```sh
+node_modules/.bin/sequelize migration:generate --name user
+```
+
+This command will generate a file for your migration with two methods `up` and `down`
+
+```js
+//migrations/%timestamp%-user.js
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    /*
+      Add altering commands here.
+      Return a promise to correctly handle asynchronicity.
+
+      Example:
+      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+    */
+  },
+
+  down: (queryInterface, Sequelize) => {
+    /*
+      Add reverting commands here.
+      Return a promise to correctly handle asynchronicity.
+
+      Example:
+      return queryInterface.dropTable('users');
+    */
+  }
+};
+```
+
+So if you've taken a look at migration docs you should know that there are two methods for adding and removing columns.
+
+```js
+"use strict";
+
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    queryInterface.addColumn("Users", "password", Sequelize.STRING);
+  },
+
+  down: (queryInterface, Sequelize) => {
+    queryInterface.removeColumn("Users", "password");
+  }
+};
+```
+
+You can now run
+
+```sh
+node_modules/.bin/sequelize db:migrate
+```
+
+and add a new column `password` to User table. To revert changes just run the same command with `:undo` ending.
+
+We are not done yet. We need to update our model in order to get updated schema on a new instances of DB without need of running migrations.
+
+```js
+//models/users.js
+module.exports = (sequelize, DataTypes) => {
+  var User = sequelize.define(
+    "User",
+    {
+      email: { type: DataTypes.STRING, primaryKey: true },
+      password: DataTypes.STRING
+    },
+    {}
+  );
+  User.associate = function(models) {
+    models.User.hasMany(models.List);
+  };
+  return User;
+};
+```
+
+One more thing! Let's add some data to our DB that can be used as initial. To do that let's create a seed file with initial data. Running this command will result in a file in your seeders directory.
+
+```sh
+node_modules/.bin/sequelize seed:create --name init
+```
+
+As with migration file we have two methods `up` and `down`. Go ahead and add some logic to this seed.
+
+```js
+//seeders/%timestamp%-init.js
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface
+      .bulkInsert(
+        "Users",
+        [
+          {
+            email: "test_user@email.com",
+            password: "password",
+            updatedAt: new Date(),
+            createdAt: new Date()
+          }
+        ],
+        {}
+      )
+      .then(() =>
+        queryInterface.bulkInsert(
+          "Lists",
+          [
+            {
+              title: "test_list_1",
+              UserEmail: "test_user@email.com",
+              updatedAt: new Date(),
+              createdAt: new Date()
+            },
+            {
+              title: "test_list_2",
+              UserEmail: "test_user@email.com",
+              updatedAt: new Date(),
+              createdAt: new Date()
+            }
+          ],
+          {}
+        )
+      )
+      .then(() =>
+        queryInterface.bulkInsert(
+          "Todos",
+          [
+            {
+              done: false,
+              removed: false,
+              text: "test_todo_1",
+              ListId: 1,
+              updatedAt: new Date(),
+              createdAt: new Date()
+            },
+            {
+              done: false,
+              removed: false,
+              text: "test_todo_2",
+              ListId: 1,
+              updatedAt: new Date(),
+              createdAt: new Date()
+            },
+            {
+              done: false,
+              removed: false,
+              text: "test_todo_3",
+              ListId: 2,
+              updatedAt: new Date(),
+              createdAt: new Date()
+            }
+          ],
+          {}
+        )
+      );
+  },
+
+  down: (queryInterface, Sequelize) => {
+    return Promise.all([
+      queryInterface.bulkDelete("Users", null, {}),
+      queryInterface.bulkDelete("Lists", null, {}),
+      queryInterface.bulkDelete("Todos", null, {})
+    ]);
+  }
+};
+```
+
+Now when you run
+
+```sh
+node_modules/.bin/sequelize db:seed:all
+```
+
+Your database will be populated with initial data to work with.
+
+That is it! We have set up the basic DB with initial tooling!
+
 If you ready to go to the next step run:
 
 ```sh
