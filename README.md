@@ -20,7 +20,7 @@ In order to start developing our application we need to install **express-genera
 npm install -g express-generator
 ```
 
-After that we can generate our app. To make our app simplier we won't use any template engines (`--no-view` flag).
+After that we can generate our app. To make our app simpler we won't use any template engines (`--no-view` flag).
 
 ```sh
 express --no-view
