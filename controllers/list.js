@@ -8,9 +8,9 @@ module.exports = {
     return listInterface.get({ id });
   },
 
-  createList: ({ title }) => {
-    validate({ title });
-    return listInterface.create({ title });
+  createList: ({ title }, user) => {
+    validate({ title }, user);
+    return listInterface.create({ title }, user);
   },
 
   updateList: (list, newData) => {

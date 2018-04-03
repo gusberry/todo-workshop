@@ -1,9 +1,12 @@
 const express = require("express");
+const { ensureLoggedIn } = require("connect-ensure-login");
 
 const todoController = require("../controllers/todo");
 const listController = require("../controllers/list");
 
 const router = express.Router();
+
+router.use(ensureLoggedIn("/login"));
 
 router.get("/", function(req, res) {
   listController.getListsTodos(req.context.list).then(todos => res.send(todos));

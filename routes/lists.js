@@ -1,16 +1,19 @@
 const express = require("express");
+const { ensureLoggedIn } = require("connect-ensure-login");
 
 const todosRouter = require("./todos");
 const listController = require("../controllers/list");
 
 const router = express.Router();
 
+router.use(ensureLoggedIn("/login"));
+
 router.get("/", function(req, res) {
   res.send("All lists");
 });
 
 router.post("/", function(req, res) {
-  listController.createList(req.body).then(list => res.send(list));
+  listController.createList(req.body, req.user).then(list => res.send(list));
 });
 
 router.param("listId", function(req, res, next, listId) {
