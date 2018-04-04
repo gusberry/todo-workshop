@@ -12,33 +12,43 @@ router.get("/", function(req, res) {
   res.send("All lists");
 });
 
-router.post("/", function(req, res) {
-  listController.createList(req.body, req.user).then(list => res.send(list));
+router.post("/", function(req, res, next) {
+  listController
+    .createList(req.body, req.user)
+    .then(list => res.send(list))
+    .catch(next);
 });
 
 router.param("listId", function(req, res, next, listId) {
-  listController.getListById({ id: listId }).then(list => {
-    req.context = req.context || {};
-    req.context.list = list;
+  listController
+    .getListById({ id: listId })
+    .then(list => {
+      req.context = req.context || {};
+      req.context.list = list;
 
-    next();
+      next();
 
-    return list;
-  });
+      return list;
+    })
+    .catch(next);
 });
 
-router.get("/:listId", function(req, res) {
+router.get("/:listId", function(req, res, next) {
   res.json(req.context.list);
 });
 
-router.put("/:listId", function(req, res) {
+router.put("/:listId", function(req, res, next) {
   listController
     .updateList(req.context.list, req.body)
-    .then(list => res.json(list));
+    .then(list => res.json(list))
+    .catch(next);
 });
 
-router.delete("/:listId", function(req, res) {
-  listController.deleteList(req.context.list).then(list => res.json(list));
+router.delete("/:listId", function(req, res, next) {
+  listController
+    .deleteList(req.context.list)
+    .then(list => res.json(list))
+    .catch(next);
 });
 
 router.use("/:listId/todos", todosRouter);

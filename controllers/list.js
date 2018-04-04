@@ -1,6 +1,11 @@
 const listInterface = require("../interfaces/list");
+const errorController = require("./error");
 
-const validate = () => {}; // TODO make it valuable
+const validate = argument1 => {
+  if (!argument1) {
+    throw errorController.getBadRequestError("Missing data");
+  }
+}; // TODO make it valuable
 
 module.exports = {
   getListById: ({ id }) => {

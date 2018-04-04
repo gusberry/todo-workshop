@@ -1,6 +1,6 @@
 module.exports = require("../interfaces/error");
 
-module.exports.errorHandlerMiddleware = (err, req, res) => {
+module.exports.errorHandlerMiddleware = (err, req, res, next) => {
   let customError = err;
 
   if (!module.exports.isCustomError(err)) {
@@ -8,5 +8,5 @@ module.exports.errorHandlerMiddleware = (err, req, res) => {
   }
 
   res.status(err.output.statusCode);
-  res.json(err.output.payload);
+  return res.json(err.output.payload);
 };

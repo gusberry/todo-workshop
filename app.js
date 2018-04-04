@@ -10,6 +10,8 @@ const todosRouter = require("./routes/todos");
 const listsRouter = require("./routes/lists");
 const authRouter = require("./routes/auth");
 
+const { errorHandlerMiddleware } = require("./controllers/error");
+
 const app = express();
 
 app.use(logger("dev"));
@@ -32,5 +34,7 @@ app.use("/", indexRouter);
 app.use("/", authRouter);
 app.use("/lists", listsRouter);
 app.use("/todos", todosRouter);
+
+app.use(errorHandlerMiddleware);
 
 module.exports = app;
