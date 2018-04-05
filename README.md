@@ -245,13 +245,70 @@ In this case the request and response objects are not available for us anymore a
 
 ### Shutting down your server
 
-...
+Ok so we are going to shutdown our server. There can be many reasons:
+
+* node process has crashed
+* machine that we are running our server on is going to shutdown
+* manual signal to shutdown server from console
+* signal to shutdown from another process
+* ...
+
+But what need to do in those cases is to gracefully shutdown our application without any data lose. It's very important part as during closing of a server there can be some active DB connections that we probably don't want to close as there is a save process of a large data. Or user is trying to get a large data set from DB and many other cases. So there is currently three things that we need to do:
+
+1.  disable possibility to accept new request as we don't need to open new transactions to DB
+2.  finish all DB activity
+3.  finally shut down our process
+
+NOTE: in real world applications there are more steps like creating logs or sending notifications etc.
+
+In NodeJS `http` package (that is used to bootstrap our server) has a specific method to disable all incoming request and start a process of closing server - `.close(callback)`. Callback function will be invoked as soon as accepting new request will be terminated.
+
+```js
+// bin/www
+const server = http.createServer(app);
+
+server.close(onClose);
+```
+
+**Sequelize** has almost the same mechanism to gracefully shutdown our DB connection - `sequelize.close().then`.
+
+To final shutdown we will use our `process` object.
+
+```js
+process.exit(0);
+```
+
+Ok let's combine all those methods to our **_graceful shutdown_**
+
+```js
+// bin/www
+const gracefullyShutdownDB = () =>
+  db.sequelize.close().then(() => {
+    process.exit(0);
+  });
+
+const gracefullyShutdownServer = () => server.close(gracefullyShutdownDB);
+```
+
+Now when we have our mechanism to power off the server we need to specify situations when we are going to do that. As our **server** and **process** objects can add event listeners to them we need to specify event names to attach to. For server it will be _error and close_. For process - _SIGTERM, SIGINT and unhandledRejection_. These are the majority of events to close application.
+
+```js
+//bin/www
+server.on("error", gracefullyShutdownDB);
+server.on("close", gracefullyShutdownDB);
+
+process.on("SIGTERM", gracefullyShutdownServer);
+process.on("SIGINT", gracefullyShutdownServer);
+process.on("unhandledRejection", gracefullyShutdownServer);
+```
+
+That is it! In case of emergency situation we are sure for 99% that our data won't be lost. There is 1% for situations like someone has spilled a cup of cofFee on your laptop.
 
 As usual. If you're ready just switch to another branch.
 
 ```sh
 git clean -fd
-git checkout step-7
+git checkout step-8
 ```
 
 [passport.js]: http://www.passportjs.org
