@@ -8,5 +8,3 @@ As usual. If you're ready just switch to another branch.
 git clean -fd
 git checkout step-6
 ```
-
-[passport.js]: http://www.passportjs.org

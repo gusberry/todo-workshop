@@ -2,7 +2,6 @@ const express = require("express");
 const session = require("express-session");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
 const passport = require("passport");
 
 const indexRouter = require("./routes/index");
@@ -11,10 +10,11 @@ const listsRouter = require("./routes/lists");
 const authRouter = require("./routes/auth");
 
 const { errorHandlerMiddleware } = require("./controllers/error");
+const { requestLogger } = require("./controllers/log");
 
 const app = express();
 
-app.use(logger("dev"));
+app.use(requestLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));

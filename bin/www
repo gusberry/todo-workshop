@@ -1,7 +1,11 @@
+require('dotenv').load();
+
 const app = require("../app");
 const db = require("../models");
 const debug = require("debug")("workshop:server");
 const http = require("http");
+
+const logger = require("../controllers/log");
 
 const port = normalizePort(process.env.PORT || "3000");
 
@@ -19,11 +23,11 @@ const gracefullyShutdownServer = () => server.close(gracefullyShutdownDB);
 db.sequelize
   .sync({ force: true })
   .then(() => {
-    console.log("Connection has been established successfully.");
+    logger.debug("Connection has been established successfully.");
     server.listen(port);
   })
   .catch(err => {
-    console.error("Something went wrong: ", err);
+    logger.error("Something went wrong: ", err);
     gracefullyShutdownServer();
   });
 
